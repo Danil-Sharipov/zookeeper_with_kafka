@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('make_topics') {
+        stage('1p1c') {
             steps {
+                git 'https://github.com/Danil-Sharipov/zookeeper_with_kafka.git'
                 sh '''
                     docker compose up -d
                 '''

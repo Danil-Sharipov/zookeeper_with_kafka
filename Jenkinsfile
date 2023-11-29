@@ -5,14 +5,17 @@ pipeline {
         stage('1z1k make topics') {
             steps {
                 sh '''
-                    docker run -d --name kafka-zookeeper -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=\`docker-machine ip \\`docker-machine active\\`` --env ADVERTISED_PORT=9092 spotify/kafka
+                    docker compose up -d
                 '''
             }
             steps{
                 sh '''
-                    docker exec kafka-zookeeper /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
-                    docker exec kafka-zookeeper /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
-                    docker exec kafka-zookeeper /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
+                    docker compose exec consumer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
+                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
+                    docker compose exec consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
+                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
+                    docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper consumer:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
+                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper producer:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
 
 
                 '''

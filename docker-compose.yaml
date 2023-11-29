@@ -4,15 +4,14 @@ services:
   consumer:
     image: spotify/kafka
     container_name: consumer
-    ports:
-      - 2181:2181
-      - 9092:9092
-    networks:
-      - spark-network
-    volumes:
-      - /opt/java
-      - /opt/spark
     environment:
       ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
       ADVERTISED_PORT: 9092
-      
+  producer:
+    image: spotify/kafka
+    container_name: producer
+    environment:
+      ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
+      ADVERTISED_PORT: 9092
+networks:
+  kafka-network:

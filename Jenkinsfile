@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('1z1k-make-topics') {
+        stage('make_topics') {
             steps {
                 sh '''
                     docker compose up -d

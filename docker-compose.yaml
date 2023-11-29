@@ -4,14 +4,23 @@ services:
   consumer:
     image: spotify/kafka
     container_name: consumer
-    environment:
-      ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
-      ADVERTISED_PORT: 9092
+    # environment:
+    #   ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
+    #   ADVERTISED_PORT: 9092
+    networks:
+      - kafka-network
   producer:
     image: spotify/kafka
     container_name: producer
-    environment:
-      ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
-      ADVERTISED_PORT: 9092
+    networks:
+      - kafka-network
+  kafka:
+    image: spotify/kafka
+    container_name: kafka
+    networks:
+      - kafka-network
+    # environment:
+    #   ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
+    #   ADVERTISED_PORT: 9092
 networks:
   kafka-network:

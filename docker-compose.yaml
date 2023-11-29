@@ -17,6 +17,9 @@ services:
   kafka:
     image: spotify/kafka
     container_name: kafka
+    ports:
+      - 2181:2181
+      - 9092:9092
     networks:
       - kafka-network
     # environment:

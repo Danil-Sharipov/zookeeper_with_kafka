@@ -5,7 +5,7 @@ pipeline {
         stage('1z1k make topics') {
             steps {
                 sh '''
-                    docker run -d --name kafka-zookeeper -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=`docker-machine ip \`docker-machine active\`` --env ADVERTISED_PORT=9092 spotify/kafka
+                    docker run -d --name kafka-zookeeper -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=docker-machine ip \ docker-machine active`` --env ADVERTISED_PORT=9092 spotify/kafka
                 '''
             }
             steps{
@@ -24,6 +24,14 @@ pipeline {
             steps{
                 sh'''
                     python3 test/test.py
+                '''
+
+            }
+        }
+        stage('1z1k consumer+produser for only'){
+            steps{
+                sh'''
+                    
                 '''
 
             }

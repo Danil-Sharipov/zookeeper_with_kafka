@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('1z1k make topics') {
+        stage('1z1k-make-topics') {
             steps {
                 sh '''
                     docker compose up -d
@@ -10,12 +10,12 @@ pipeline {
             }
             steps{
                 sh '''
-                    docker compose exec consumer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
-                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
-                    docker compose exec consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
-                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
+                    docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
+                    docker compose exec -u 0 producer /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
+                    docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
+                    docker compose exec -u 0 producer /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
                     docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper consumer:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
-                    docker compose exec producer /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper producer:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
+                    docker compose exec -u 0 producer /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper producer:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
 
 
                 '''

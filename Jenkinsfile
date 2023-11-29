@@ -28,22 +28,7 @@ pipeline {
 
             }
         }
-        stage('test'){
-            steps{
-                sh '''
-                    echo "test"
-                    pip install docker
-                    python3 test/test1.py
-                    python3 test/test2.py
-                    
-                '''
-            }
-        }
-        stage('deploy'){
-            steps{
-                sh 'echo "deploy"'
-            }
-        }
+        
     }
     post {
      success {

@@ -8,7 +8,7 @@ pipeline {
                 sh'''
                     docker compose up -d
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
-                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon  server.properties
+                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server.properties
                     sleep 10
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic MyTopic --partitions 1 --replication-factor 1
 
@@ -23,13 +23,42 @@ pipeline {
 
             }
         }
-        stage('1z1k consumer+produser for only'){
+        stage('1p1c consumer+produser for only'){
             steps{
                 sh'''
-                    docker compose exec -u 0 producer /bin/bash -c "echo 'Hello, World from Kafka' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic MyTopic"
+                    docker compose exec -u 0 producer /bin/bash -c "echo 'I am so exhausted' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic MyTopic"
                     docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic MyTopic --from-beginning --max-messages 1
+
                 '''
 
+            }
+        }
+        stage('3 broker'){
+            steps{
+                sh'''
+                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-1.properties
+                    sleep 10
+                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-2.properties
+                    sleep 10
+                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic replicated-topic --partitions 1 --replication-factor 3
+
+                '''
+            }
+        }
+        stage('3 broker test'){
+            steps{
+                sh'''
+                    python3 test/test2.py
+                '''
+
+            }
+        }
+        stage('fault tolerance'){
+            steps{
+                sh'''
+                    docker compose exec -u 0 producer /bin/bash -c "echo 'hello 1' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic replicated-topic"
+                    docker compose exec -u 0 producer /bin/bash -c "echo 'hello 2' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic replicated-topic"
+                '''
             }
         }
         

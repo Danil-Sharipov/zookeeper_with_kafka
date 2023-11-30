@@ -60,7 +60,7 @@ pipeline {
                     docker compose exec -u 0 producer /bin/bash -c "echo 'hello 2' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic replicated-topic"
                     docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic replicated-topic --from-beginning --max-messages 2
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic replicated-topic
-                    chmod +x test/test.sh
+                    chmod +x scripts/test.sh
                     docker compose exec -u 0 -d kafka /scripts/test.sh
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic replicated-topic
 

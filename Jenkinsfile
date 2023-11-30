@@ -62,6 +62,7 @@ pipeline {
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic replicated-topic
                     chmod +x scripts/test.sh
                     docker compose exec -u 0 -d kafka /scripts/test.sh
+                    sleep 10 
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic replicated-topic
 
                 '''

@@ -30,7 +30,6 @@ services:
       - ./logs/kafka-logs-1:/tmp/kafka-logs-1
       - ./logs/kafka-logs-2:/tmp/kafka-logs-2
       - ./scripts:/scripts
-      - ./file.log:/file.log
     # environment:
     #   ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
     #   ADVERTISED_PORT: 9092

@@ -29,6 +29,7 @@ services:
       - ./config/server-2.properties:/opt/kafka_2.11-0.10.1.0/config/server-2.properties
       - ./logs/kafka-logs-1:/tmp/kafka-logs-1
       - ./logs/kafka-logs-2:/tmp/kafka-logs-2
+      - ./scripts:/scripts
     # environment:
     #   ADVERTISED_HOST: \`docker-machine ip \\`docker-machine active\\``
     #   ADVERTISED_PORT: 9092

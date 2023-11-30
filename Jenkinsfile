@@ -36,9 +36,9 @@ pipeline {
         stage('3 broker'){
             steps{
                 sh'''
-                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-1.properties
+                    docker compose exec kafka sh -c "/opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-1.properties|sleep 2"
                     sleep 10
-                    docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-2.properties
+                    docker compose exec kafka sh -c "/opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server-2.properties|sleep 2"
                     sleep 10
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic replicated-topic --partitions 1 --replication-factor 3
 
@@ -58,6 +58,7 @@ pipeline {
                 sh'''
                     docker compose exec -u 0 producer /bin/bash -c "echo 'hello 1' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic replicated-topic"
                     docker compose exec -u 0 producer /bin/bash -c "echo 'hello 2' | /opt/kafka_2.11-0.10.1.0/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic replicated-topic"
+                    docker compose exec -u 0 consumer /opt/kafka_2.11-0.10.1.0/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic replicated-topic --from-beginning --max-messages 2
                 '''
             }
         }

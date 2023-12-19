@@ -1,7 +1,8 @@
 # zookeeper-with-kafka
-1)
-```bash
-/opt/kafka_2.11-0.10.1.0/bin/zookeeper-shell.sh localhost:2181 ls /brokers/ids
-
-
-```
+Лабораторная работа номер 5.
+1) Развертка kafka+zookeeper
+2) Тест передачи сообщения
+3) 3 брокера
+4) Проверка на отказоустойчивость
+5) key, message сообщения
+6) file read

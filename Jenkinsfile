@@ -6,7 +6,7 @@ pipeline {
             steps {
                 git 'https://github.com/Danil-Sharipov/zookeeper_with_kafka.git'
                 sh'''
-                    docker compose up -d
+                    docker compose down && docker compose up -d
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh -daemon zookeeper.properties
                     docker compose exec -u 0 kafka /opt/kafka_2.11-0.10.1.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.11-0.10.1.0/config/server.properties
                     sleep 10
